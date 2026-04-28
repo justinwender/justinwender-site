@@ -1,3 +1,4 @@
+import { codeInput } from "@sanity/code-input";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 
@@ -32,5 +33,5 @@ export default defineConfig({
           )
         : prev,
   },
-  plugins: [structureTool({ structure })],
+  plugins: [structureTool({ structure }), codeInput()],
 });
