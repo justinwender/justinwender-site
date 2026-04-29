@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   // them through Turbopack's server pipeline triggers a CJS/ESM interop crash
   // ("createContext is not a function") during page-data collection at build.
   serverExternalPackages: ["sanity", "styled-components"],
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+  },
 };
 
 export default nextConfig;
