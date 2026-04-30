@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import Container from "../../../components/Container";
 import { sanityFetch } from "../../../sanity/lib/fetch";
 import { siteSettingsQuery } from "../../../sanity/lib/queries";
@@ -16,21 +18,19 @@ export default async function ContactPage() {
 
         {tagline && <p className="mt-4">{tagline}</p>}
 
-        <ul className="mt-10 space-y-3">
+        <dl className="mt-10 space-y-5 sm:space-y-3">
           {email && (
-            <li>
-              <span className="text-text-muted mr-2">Email</span>
+            <ContactRow label="Email">
               <a
                 href={`mailto:${email}`}
                 className="text-accent underline underline-offset-4 decoration-1 hover:decoration-2"
               >
                 {email}
               </a>
-            </li>
+            </ContactRow>
           )}
           {social.map((link) => (
-            <li key={`${link.platform}:${link.url}`}>
-              <span className="text-text-muted mr-2">{link.platform}</span>
+            <ContactRow key={`${link.platform}:${link.url}`} label={link.platform}>
               <a
                 href={link.url}
                 target="_blank"
@@ -40,10 +40,25 @@ export default async function ContactPage() {
                 {link.url.replace(/^https?:\/\//, "")}
                 <span aria-hidden="true">&nbsp;↗</span>
               </a>
-            </li>
+            </ContactRow>
           ))}
-        </ul>
+        </dl>
       </div>
     </Container>
+  );
+}
+
+function ContactRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-[6rem_1fr] gap-y-1 sm:gap-x-6">
+      <dt className="text-text-muted">{label}</dt>
+      <dd>{children}</dd>
+    </div>
   );
 }

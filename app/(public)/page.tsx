@@ -3,13 +3,7 @@ import Link from "next/link";
 import Container from "../../components/Container";
 import { sanityFetch } from "../../sanity/lib/fetch";
 import { featuredProjectsQuery } from "../../sanity/lib/queries";
-import type { ProjectListItem, ProjectStatus } from "../../sanity/types";
-
-const statusLabel: Record<ProjectStatus, string> = {
-  active: "Active",
-  completed: "Completed",
-  archived: "Archived",
-};
+import type { ProjectListItem } from "../../sanity/types";
 
 export default async function HomePage() {
   const projects = await sanityFetch<ProjectListItem[]>({
@@ -83,23 +77,16 @@ function ProjectListRow({ project }: { project: ProjectListItem }) {
   );
   return (
     <article>
-      <div className="flex items-baseline gap-3">
-        {slug ? (
-          <Link
-            href={`/projects/${slug}`}
-            className="hover:underline underline-offset-4 decoration-1"
-          >
-            {titleEl}
-          </Link>
-        ) : (
-          titleEl
-        )}
-        {project.status && (
-          <span className="font-mono text-[0.7rem] uppercase tracking-widest text-text-muted">
-            {statusLabel[project.status]}
-          </span>
-        )}
-      </div>
+      {slug ? (
+        <Link
+          href={`/projects/${slug}`}
+          className="hover:underline underline-offset-4 decoration-1"
+        >
+          {titleEl}
+        </Link>
+      ) : (
+        titleEl
+      )}
       {project.summary && (
         <p className="mt-1 text-text-muted">{project.summary}</p>
       )}
