@@ -16,7 +16,7 @@ export default async function HomePage() {
         <header>
           <h1 className="font-serif text-5xl leading-[1.1]">Justin Wender</h1>
           <p className="mt-4 text-lg">
-            I work on blockchain data infrastructure, currently as a BDR at Allium.
+            I work on blockchain data infrastructure at Allium.
           </p>
         </header>
 
