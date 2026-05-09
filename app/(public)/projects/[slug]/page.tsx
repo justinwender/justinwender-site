@@ -142,11 +142,18 @@ export default async function ProjectPage({
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-accent underline underline-offset-4 decoration-1 hover:decoration-2"
+                      className="group inline-flex items-center text-accent"
                     >
-                      {Icon && <Icon size={16} aria-hidden="true" />}
-                      <span>{link.label}</span>
-                      <span aria-hidden="true">↗</span>
+                      <span
+                        aria-hidden="true"
+                        className="inline-flex w-5 shrink-0 justify-center"
+                      >
+                        {Icon && <Icon size={16} />}
+                      </span>
+                      <span className="ml-3 underline underline-offset-4 decoration-1 group-hover:decoration-2">
+                        {link.label}
+                        <span aria-hidden="true">&nbsp;↗</span>
+                      </span>
                     </a>
                   </li>
                 );
