@@ -16,15 +16,17 @@ export default async function HomePage() {
         <header>
           <h1 className="font-serif text-5xl leading-[1.1]">Justin Wender</h1>
           <p className="mt-4 text-lg">
-            I work on crypto data infrastructure, currently as a BDR at Allium.
+            I work on blockchain data infrastructure, currently as a BDR at Allium.
           </p>
         </header>
 
         <p className="mt-8">
-          Most of my work sits between economics, game theory, and the practical
-          problems of building trustworthy systems on public data. This site is
-          where I put longer-form work: research, projects, and occasional
-          writing.
+          Most of my work is the same problem in different forms: how do you make 
+          public, adversarial, often-messy onchain data trustworthy enough for 
+          serious people to act on it? That problem pulls in economics, game theory, 
+          and a fair amount of plumbing. This site is where I put longer-form work: 
+          research, projects, and occasional writing.
+
         </p>
 
         <section className="mt-20">
