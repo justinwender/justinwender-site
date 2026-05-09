@@ -3,7 +3,7 @@ import type { PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import Image from "next/image";
 
-import { dataset, projectId } from "../sanity/env";
+import { urlFor } from "../sanity/lib/image";
 
 type SanityImageValue = {
   _type: "image";
@@ -23,18 +23,6 @@ type SanityLinkValue = {
   href: string;
   openInNewTab?: boolean;
 };
-
-function imageUrl(ref: string): { src: string; width: number; height: number } | null {
-  // image-<id>-<width>x<height>-<ext>
-  const match = ref.match(/^image-([^-]+)-(\d+)x(\d+)-(\w+)$/);
-  if (!match) return null;
-  const [, id, width, height, ext] = match;
-  return {
-    src: `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${width}x${height}.${ext}`,
-    width: Number(width),
-    height: Number(height),
-  };
-}
 
 const components: PortableTextComponents = {
   block: {
@@ -90,17 +78,23 @@ const components: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       const v = value as SanityImageValue;
-      const ref = v.asset?._ref;
-      if (!ref) return null;
-      const img = imageUrl(ref);
-      if (!img) return null;
+      if (!v.asset?._ref) return null;
+      if (!v.alt) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `PortableText: image asset ${v.asset._ref} is missing alt text.`,
+        );
+      }
+      const dims = parseImageDimensions(v.asset._ref);
+      const src = urlFor(v).width(1360).fit("max").auto("format").url();
       return (
         <figure className="mt-8">
           <Image
-            src={img.src}
+            src={src}
             alt={v.alt ?? ""}
-            width={img.width}
-            height={img.height}
+            width={dims.width}
+            height={dims.height}
+            sizes="(min-width: 768px) 680px, 100vw"
             className="w-full h-auto rounded-md"
           />
           {v.alt && (
@@ -114,20 +108,32 @@ const components: PortableTextComponents = {
     code: ({ value }) => {
       const v = value as SanityCodeValue;
       return (
-        <div className="mt-6">
+        <div className="relative mt-6">
+          <pre className="font-mono text-sm leading-relaxed border border-rule rounded-md bg-rule/40 p-4 pr-20 overflow-x-auto">
+            <code>{v.code}</code>
+          </pre>
+          {v.language && (
+            <span className="pointer-events-none absolute top-2 right-3 font-mono text-[0.65rem] uppercase tracking-widest text-text-muted">
+              {v.language}
+            </span>
+          )}
           {v.filename && (
-            <div className="font-mono text-xs uppercase tracking-widest text-text-muted mb-1">
+            <div className="mt-1 font-mono text-xs text-text-muted">
               {v.filename}
             </div>
           )}
-          <pre className="font-mono text-sm leading-relaxed border border-rule rounded-md p-4 overflow-x-auto">
-            <code>{v.code}</code>
-          </pre>
         </div>
       );
     },
   },
 };
+
+function parseImageDimensions(ref: string): { width: number; height: number } {
+  // image-<id>-<width>x<height>-<ext>
+  const match = ref.match(/^image-[^-]+-(\d+)x(\d+)-\w+$/);
+  if (!match) return { width: 1360, height: 1360 };
+  return { width: Number(match[1]), height: Number(match[2]) };
+}
 
 export default function PortableText({ value }: { value: PortableTextBlock[] }) {
   return <PortableTextRenderer value={value} components={components} />;
